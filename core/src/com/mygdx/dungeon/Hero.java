@@ -18,10 +18,21 @@ public class Hero {
         this.projectileController = projectileController;
     }
 
+
     public void update(float dt) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) projectileController.changeDoubleShootMode();
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            if (projectileController.isDoubleShoot()) {
+                projectileController.activate(position.x, position.y, 200, 0);
+                projectileController.activate(position.x, position.y, 200, 0);
+            }
             projectileController.activate(position.x, position.y, 200, 0);
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
+
+        }
+        };
+
     }
 
     public void render(SpriteBatch batch) {
