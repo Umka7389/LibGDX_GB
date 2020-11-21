@@ -1,7 +1,5 @@
 package com.mygdx.dungeon;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -9,11 +7,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class ProjectileController {
     private static final int MAX_PROJECTILES = 100;
     private Projectile[] items;
-    private boolean doubleShoot = false;
-
-    public boolean isDoubleShoot() {
-        return doubleShoot;
-    }
 
     public Projectile[] getItems() {
         return items;
@@ -34,10 +27,6 @@ public class ProjectileController {
                 return;
             }
         }
-    }
-
-    public void changeDoubleShootMode() {
-        doubleShoot = !doubleShoot;
     }
 
     public void update(float dt) {
