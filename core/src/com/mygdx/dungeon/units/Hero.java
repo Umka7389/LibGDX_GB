@@ -1,6 +1,8 @@
 package com.mygdx.dungeon.units;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.mygdx.dungeon.GameController;
@@ -10,6 +12,11 @@ public class Hero extends Unit {
     float movementTime;
     float movementMaxTime;
     int targetX, targetY;
+    float exp;
+    int movesCount;
+    int maxMoves;
+    private BitmapFont font;
+
 
     public Hero(TextureAtlas atlas, GameController gc) {
         super(gc, 1, 1, 10);
@@ -18,6 +25,10 @@ public class Hero extends Unit {
         this.movementMaxTime = 0.2f;
         this.targetX = cellX;
         this.targetY = cellY;
+        this.exp = 0f;
+        this.maxMoves = 5;
+        this.movesCount = maxMoves;
+        font = new BitmapFont();
     }
 
     public void update(float dt) {
@@ -33,6 +44,10 @@ public class Hero extends Unit {
             if (Math.abs(gc.getCursorX() - cellX) + Math.abs(gc.getCursorY() - cellY) == 1) {
                 targetX = gc.getCursorX();
                 targetY = gc.getCursorY();
+                if (gc.getGameMap().isCellPassable(targetX, targetY)) {
+                    movesCount -= 1;
+                    if (movesCount < 0) movesCount = maxMoves;
+                }
             }
         }
 
@@ -40,7 +55,9 @@ public class Hero extends Unit {
         if (m != null) {
             targetX = cellX;
             targetY = cellY;
+            if (m.getHp() == 1) exp += 1;
             m.takeDamage(1);
+            if(m.counter()) this.takeDamage(1);
         }
 
         if (!gc.getGameMap().isCellPassable(targetX, targetY)) {
@@ -66,6 +83,8 @@ public class Hero extends Unit {
             px = cellX * GameMap.CELL_SIZE + (targetX - cellX) * (movementTime / movementMaxTime) * GameMap.CELL_SIZE;
             py = cellY * GameMap.CELL_SIZE + (targetY - cellY) * (movementTime / movementMaxTime) * GameMap.CELL_SIZE;
         }
+        font.setColor(Color.MAROON);
+        font.draw(batch, getCurrentMoves(), px + 40, py + 15);
         batch.draw(texture, px, py);
         batch.setColor(0.0f, 0.0f, 0.0f, 1.0f);
         batch.draw(textureHp, px + 1, py + 51, 58, 10);
@@ -75,4 +94,9 @@ public class Hero extends Unit {
         batch.draw(textureHp, px + 2, py + 52, (float) hp / hpMax * 56, 8);
         batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
     }
+
+    public String getCurrentMoves() {
+        return movesCount + "/" + maxMoves;
+    }
+
 }

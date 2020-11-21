@@ -14,7 +14,10 @@ public class Monster extends Unit {
         this.texture = atlas.findRegion("monster");
         this.textureHp = atlas.findRegion("hp");
         this.hp = -1;
+        this.counterProbability = 0.25f;
     }
+
+
 
     public void activate(int cellX, int cellY) {
         this.cellX = cellX;
@@ -25,4 +28,5 @@ public class Monster extends Unit {
 
     public void update(float dt) {
     }
+
 }
