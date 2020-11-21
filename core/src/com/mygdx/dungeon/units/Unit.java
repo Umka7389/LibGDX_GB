@@ -15,6 +15,12 @@ public abstract class Unit {
     int cellX;
     int cellY;
     Vector2 tmp;
+    float counterProbability;
+
+
+    public int getHp() {
+        return hp;
+    }
 
     public int getCellX() {
         return cellX;
@@ -36,6 +42,10 @@ public abstract class Unit {
     public boolean takeDamage(int amount) {
         hp -= amount;
         return hp <= 0;
+    }
+
+    public boolean counter() {
+        return Math.random() <= counterProbability;
     }
 
     public abstract void update(float dt);
