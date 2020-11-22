@@ -6,12 +6,14 @@ import com.mygdx.dungeon.GameController;
 public class Monster extends Unit {
     private float aiBrainsImplseTime;
     private Unit target;
+    private float agrDistance;
 
     public Monster(TextureAtlas atlas, GameController gc) {
         super(gc, 5, 2, 10);
         this.texture = atlas.findRegion("monster");
         this.textureHp = atlas.findRegion("hp");
         this.hp = -1;
+        this.agrDistance = 5.0f;
     }
 
     public void activate(int cellX, int cellY) {
@@ -44,18 +46,25 @@ public class Monster extends Unit {
     public void tryToMove() {
         int bestX = -1, bestY = -1;
         float bestDst = 10000;
-        for (int i = cellX - 1; i <= cellX + 1; i++) {
-            for (int j = cellY - 1; j <= cellY + 1; j++) {
-                if (Math.abs(cellX - i) + Math.abs(cellY - j) == 1 && gc.getGameMap().isCellPassable(i, j) && gc.getUnitController().isCellFree(i, j)) {
-                    float dst = (float) Math.sqrt((i - target.getCellX()) * (i - target.getCellX()) + (j - target.getCellY()) * (j - target.getCellY()));
-                    if (dst < bestDst) {
-                        bestDst = dst;
-                        bestX = i;
-                        bestY = j;
+        float currentTargetDistance = (float) Math.sqrt((cellX - target.getCellX()) * (cellX - target.getCellX()) + (cellY - target.getCellY()) * (cellY - target.getCellY()));
+        if (currentTargetDistance <= agrDistance) {
+            for (int i = cellX - 1; i <= cellX + 1; i++) {
+                for (int j = cellY - 1; j <= cellY + 1; j++) {
+                    if (Math.abs(cellX - i) + Math.abs(cellY - j) == 1 && gc.getGameMap().isCellPassable(i, j) && gc.getUnitController().isCellFree(i, j)) {
+                        float dst = (float) Math.sqrt((i - target.getCellX()) * (i - target.getCellX()) + (j - target.getCellY()) * (j - target.getCellY()));
+                        if (dst < bestDst) {
+                            bestDst = dst;
+                            bestX = i;
+                            bestY = j;
+                        }
                     }
                 }
             }
+        } else {
+            bestX = cellX + ((int) (Math.random() *3))-1;
+            bestY = cellY + ((int) (Math.random() *3))-1;
         }
+
         goTo(bestX, bestY);
     }
 }
