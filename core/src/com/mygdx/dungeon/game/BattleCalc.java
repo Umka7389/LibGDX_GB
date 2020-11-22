@@ -1,8 +1,6 @@
-package com.mygdx.dungeon;
+package com.mygdx.dungeon.game;
 
 import com.badlogic.gdx.math.MathUtils;
-import com.mygdx.dungeon.units.Unit;
-
 
 public class BattleCalc {
     public static int attack(Unit attacker, Unit target) {

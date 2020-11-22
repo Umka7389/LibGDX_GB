@@ -1,17 +1,19 @@
-package com.mygdx.dungeon.units;
+package com.mygdx.dungeon.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.mygdx.dungeon.GameController;
+import com.mygdx.dungeon.helpers.Assets;
 
 
 public class Hero extends Unit {
-    public Hero(TextureAtlas atlas, GameController gc) {
+    private String name;
+
+    public Hero(GameController gc) {
         super(gc, 1, 1, 10);
+        this.name = "Sir Mullih";
         this.hpMax = 100;
         this.hp = this.hpMax;
-        this.texture = atlas.findRegion("knight");
-        this.textureHp = atlas.findRegion("hp");
+        this.texture = Assets.getInstance().getAtlas().findRegion("knight");
+        this.textureHp = Assets.getInstance().getAtlas().findRegion("hp");
     }
 
     public void update(float dt) {
@@ -24,5 +26,9 @@ public class Hero extends Unit {
                 goTo(gc.getCursorX(), gc.getCursorY());
             }
         }
+    }
+
+    public String getName() {
+        return name;
     }
 }
