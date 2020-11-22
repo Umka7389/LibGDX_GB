@@ -16,7 +16,11 @@ public class Monster extends Unit {
         this.hp = -1;
     }
 
-    public void activate(int cellX, int cellY) {
+    public int giveGold() {
+        return (int) (Math.random() * (gold + 1));
+    }
+
+    public void activate(int cellX, int cellY, int maxGold) {
         this.cellX = cellX;
         this.cellY = cellY;
         this.targetX = cellX;
@@ -24,6 +28,7 @@ public class Monster extends Unit {
         this.hpMax = 10;
         this.hp = hpMax;
         this.target = gc.getUnitController().getHero();
+        this.gold = maxGold;
     }
 
     public void update(float dt) {
