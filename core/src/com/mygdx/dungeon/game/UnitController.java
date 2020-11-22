@@ -13,6 +13,12 @@ public class UnitController {
     private Unit currentUnit;
     private int index;
     private List<Unit> allUnits;
+    private int turn;
+    private int monsterAddOnTurn;
+
+    public int getTurn() {
+        return turn;
+    }
 
     public MonsterController getMonsterController() {
         return monsterController;
@@ -39,11 +45,13 @@ public class UnitController {
         this.gc = gc;
         this.hero = new Hero(gc);
         this.monsterController = new MonsterController(gc);
+        this.turn = 1;
+        this.monsterAddOnTurn = 3;
     }
 
     public void init() {
-        this.monsterController.activate(5, 5);
-        this.monsterController.activate(9, 5);
+        this.monsterController.activate(5, 5, 3);
+        this.monsterController.activate(9, 5, 5);
         this.index = -1;
         this.allUnits = new ArrayList<>();
         this.allUnits.add(hero);
@@ -55,6 +63,15 @@ public class UnitController {
         index++;
         if (index >= allUnits.size()) {
             index = 0;
+            turn++;
+            if (turn % monsterAddOnTurn == 0) {
+                this.monsterController.activate((int) (Math.random() * gc.getGameMap().getCellsX()), (int) (Math.random() * gc.getGameMap().getCellsY()), (int) (Math.random() * 10));
+            }
+            for (Unit u : allUnits) {
+                if (u.hp < u.hpMax) {
+                    u.hp += 1;
+                }
+            }
         }
         currentUnit = allUnits.get(index);
         currentUnit.startTurn();
