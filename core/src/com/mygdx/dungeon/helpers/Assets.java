@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.mygdx.dungeon.screens.ScreenManager;
 
+
 public class Assets {
     private static final Assets ourInstance = new Assets();
 
