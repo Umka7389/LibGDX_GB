@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.dungeon.game.GameController;
 import com.mygdx.dungeon.game.WorldRenderer;
 
-
 public class GameScreen extends AbstractScreen {
     private GameController gameController;
     private WorldRenderer worldRenderer;

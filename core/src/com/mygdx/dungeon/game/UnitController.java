@@ -3,7 +3,11 @@ package com.mygdx.dungeon.game;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.mygdx.dungeon.game.units.Hero;
+import com.mygdx.dungeon.game.units.Monster;
+import com.mygdx.dungeon.game.units.Unit;
 import lombok.Data;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +47,7 @@ public class UnitController {
         for (int i = 0; i < monsterCount; i++) {
             this.createMonsterInRandomCell();
         }
+        this.createMonster(3, 1);
         this.index = -1;
         this.nextTurn();
     }
@@ -68,24 +73,12 @@ public class UnitController {
         monsterController.render(batch, font18);
     }
 
-    public boolean isThereSomeOneToAttack() {
-        boolean hasTarget = false;
-        for (int i = 0; i < getAllUnits().size(); i++) {
-            if (allUnits.indexOf(currentUnit) != i) {
-                if (currentUnit.canIAttackThisTarget(getAllUnits().get(i))) hasTarget = true;
-            }
-        }
-        return hasTarget;
-    }
-
     public void update(float dt) {
         hero.update(dt);
         monsterController.update(dt);
 
-
-        if (!currentUnit.isActive() || (currentUnit.getStep() == 0 && (currentUnit.getAction() == 0 || !isThereSomeOneToAttack()))) {
+        if (!currentUnit.isActive() || !currentUnit.getStats().doIHaveAnyPoints()) {
             nextTurn();
-
         }
     }
 

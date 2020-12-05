@@ -1,31 +1,36 @@
-package com.mygdx.dungeon.game;
+package com.mygdx.dungeon.game.units;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.dungeon.game.GameController;
+import com.mygdx.dungeon.game.Weapon;
 import com.mygdx.dungeon.helpers.Assets;
+
 
 public class Hero extends Unit {
     private String name;
 
     public Hero(GameController gc) {
-        super(gc, 1, 1, 10);
+        super(gc, 1, 1, 10, "Hero");
         this.name = "Sir Lancelot";
-        this.hpMax = 100;
-        this.hp = this.hpMax;
-        this.texture = Assets.getInstance().getAtlas().findRegion("knight");
         this.textureHp = Assets.getInstance().getAtlas().findRegion("hp");
+        this.weapon = new Weapon(Weapon.Type.SPEAR, 2, 2);
     }
 
     public void update(float dt) {
         super.update(dt);
         if (Gdx.input.justTouched() && canIMakeAction()) {
             Monster m = gc.getUnitController().getMonsterController().getMonsterInCell(gc.getCursorX(), gc.getCursorY());
-            if (m != null && canIAttackThisTarget(m)) {
+            if (m != null && canIAttackThisTarget(m, 1)) {
                 attack(m);
             } else {
                 goTo(gc.getCursorX(), gc.getCursorY());
             }
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && isStayStill()) {
+            stats.resetPoints();
         }
     }
 

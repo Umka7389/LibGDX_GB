@@ -2,6 +2,7 @@ package com.mygdx.dungeon.game;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.dungeon.game.units.Monster;
 import com.mygdx.dungeon.helpers.ObjectPool;
 
 
