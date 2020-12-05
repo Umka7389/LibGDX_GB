@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.mygdx.dungeon.game.units.Monster;
+import com.mygdx.dungeon.game.units.Unit;
 import com.mygdx.dungeon.helpers.Assets;
 import com.mygdx.dungeon.screens.ScreenManager;
 
@@ -35,6 +37,14 @@ public class WorldRenderer {
         gc.getProjectileController().render(batch);
         batch.setColor(1, 1, 1, 0.5f);
         batch.draw(cursorTexture, gc.getCursorX() * GameMap.CELL_SIZE, gc.getCursorY() * GameMap.CELL_SIZE);
+
+        if (!gc.getUnitController().isCellFree(gc.getCursorX(), gc.getCursorY())) {
+            Unit m = gc.getUnitController().getUnitInCell(gc.getCursorX(), gc.getCursorY());
+            stringHelper.append("HP: "+ m.getStats().getHp()+" DEF: "+ m.getStats().getDefence());
+            font18.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+            font18.draw(batch, stringHelper, gc.getCursorX()* GameMap.CELL_SIZE, gc.getCursorY()*GameMap.CELL_SIZE, 60, 1, false);
+        }
+        stringHelper.setLength(0);
         batch.setColor(1, 1, 1, 1);
         batch.end();
 

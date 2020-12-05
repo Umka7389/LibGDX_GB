@@ -34,7 +34,15 @@ public class UnitController {
         }
         return true;
     }
-
+    public Unit getUnitInCell(int cellX, int cellY) {
+        for (int i = 0; i < allUnits.size(); i++) {
+            Unit u = allUnits.get(i);
+            if (u.getCellX() == cellX && u.getCellY() == cellY) {
+                return u;
+            }
+        }
+        return null;
+    }
     public UnitController(GameController gc) {
         this.gc = gc;
         this.allUnits = new ArrayList<>();
