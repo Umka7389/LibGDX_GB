@@ -9,7 +9,7 @@ import com.mygdx.dungeon.helpers.Assets;
 
 public class GameMap {
     public enum CellType {
-        GRASS, WATER, TREE
+        GRASS, WATER, TREE, SWAMP
     }
 
     public enum DropType {
@@ -22,12 +22,15 @@ public class GameMap {
         DropType dropType;
         int dropPower;
 
+
+        int pointsToMove;
         int index;
 
         public Cell() {
             type = CellType.GRASS;
             dropType = DropType.NONE;
             index = 0;
+            pointsToMove = 1;
         }
 
         public void changeType(CellType to) {
@@ -42,6 +45,7 @@ public class GameMap {
     public static final int CELLS_Y = 12;
     public static final int CELL_SIZE = 60;
     public static final int FOREST_PERCENTAGE = 5;
+    public static final int SWAMP_PERCENTAGE = 5;
 
     public int getCellsX() {
         return CELLS_X;
@@ -63,6 +67,12 @@ public class GameMap {
                 this.data[i][j] = new Cell();
             }
         }
+        int swampCount = (int) ((CELLS_X * CELLS_Y * SWAMP_PERCENTAGE) / 100.0f);
+        for (int i = 0; i < swampCount; i++) {
+            Cell x = this.data[MathUtils.random(0, CELLS_X - 1)][MathUtils.random(0, CELLS_Y - 1)];
+            x.changeType(CellType.SWAMP);
+            x.pointsToMove = 2;
+        }
         int treesCount = (int) ((CELLS_X * CELLS_Y * FOREST_PERCENTAGE) / 100.0f);
         for (int i = 0; i < treesCount; i++) {
             this.data[MathUtils.random(0, CELLS_X - 1)][MathUtils.random(0, CELLS_Y - 1)].changeType(CellType.TREE);
@@ -74,11 +84,16 @@ public class GameMap {
         this.treesTextures = Assets.getInstance().getAtlas().findRegion("trees").split(60, 90)[0];
     }
 
+    public int checkCellMovePoints (int cx, int cy){
+        return data[cx][cy].pointsToMove;
+    }
+
     public boolean isCellPassable(int cx, int cy) {
         if (cx < 0 || cx > getCellsX() - 1 || cy < 0 || cy > getCellsY() - 1) {
             return false;
         }
         if (data[cx][cy].type != CellType.GRASS) {
+            if (data[cx][cy].type != CellType.SWAMP)
             return false;
         }
         return true;
@@ -87,7 +102,11 @@ public class GameMap {
     public void render(SpriteBatch batch) {
         for (int i = 0; i < CELLS_X; i++) {
             for (int j = CELLS_Y - 1; j >= 0; j--) {
+                if (data[i][j].type == CellType.SWAMP) {
+                    batch.setColor(0f, 0.4f, 0.12f, 1.0f);
+                }
                 batch.draw(grassTexture, i * CELL_SIZE, j * CELL_SIZE);
+                batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
                 if (data[i][j].type == CellType.TREE) {
                     batch.draw(treesTextures[data[i][j].index], i * CELL_SIZE, j * CELL_SIZE);
                 }

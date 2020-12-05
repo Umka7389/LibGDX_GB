@@ -153,7 +153,7 @@ public abstract class Unit implements Poolable {
                 movementTime = 0;
                 cellX = targetX;
                 cellY = targetY;
-                stats.movePoints--;
+                stats.movePoints -= gc.getGameMap().checkCellMovePoints(targetX, targetY);
                 gc.getGameMap().checkAndTakeDrop(this);
             }
         }
