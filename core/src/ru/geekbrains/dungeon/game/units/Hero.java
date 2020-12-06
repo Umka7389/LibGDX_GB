@@ -21,6 +21,7 @@ public class Hero extends Unit {
     private Group guiGroup;
     private Label hpLabel;
     private Label goldLabel;
+    private Label wellFedLabel;
 
     public Hero(GameController gc) {
         super(gc, 1, 1, 10, "Hero");
@@ -60,6 +61,11 @@ public class Hero extends Unit {
         stringHelper.setLength(0);
         stringHelper.append(gold);
         goldLabel.setText(stringHelper);
+
+        stringHelper.setLength(0);
+        stringHelper.append(stats.wellFed).append(" / ").append(stats.maxWellFed);
+        wellFedLabel.setText(stringHelper);
+
     }
 
     public void createGui() {
@@ -70,12 +76,15 @@ public class Hero extends Unit {
         Label.LabelStyle labelStyle = new Label.LabelStyle(font24, Color.WHITE);
         this.hpLabel = new Label("", labelStyle);
         this.goldLabel = new Label("", labelStyle);
+        this.wellFedLabel = new Label("", labelStyle);
         this.hpLabel.setPosition(155, 30);
         this.goldLabel.setPosition(400, 30);
+        this.wellFedLabel.setPosition(912, 30);
         Image backgroundImage = new Image(Assets.getInstance().getAtlas().findRegion("upperPanel"));
         this.guiGroup.addActor(backgroundImage);
         this.guiGroup.addActor(hpLabel);
         this.guiGroup.addActor(goldLabel);
+        this.guiGroup.addActor(wellFedLabel);
         this.guiGroup.setPosition(0, ScreenManager.WORLD_HEIGHT - 60);
 
         skin.dispose();

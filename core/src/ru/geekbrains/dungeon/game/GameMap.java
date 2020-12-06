@@ -6,9 +6,13 @@ import com.badlogic.gdx.math.MathUtils;
 import ru.geekbrains.dungeon.game.units.Unit;
 import ru.geekbrains.dungeon.helpers.Assets;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+
 public class GameMap {
     public enum CellType {
-        GRASS, WATER, TREE
+        GRASS, WATER, TREE, TREE_WITH_BERRY
     }
 
     public enum DropType {
@@ -41,6 +45,7 @@ public class GameMap {
     public static final int CELLS_Y = 12;
     public static final int CELL_SIZE = 60;
     public static final int FOREST_PERCENTAGE = 5;
+    public static final int BERRY_TREE_PROBABILITY = 50;
 
     public int getCellsX() {
         return CELLS_X;
@@ -54,6 +59,7 @@ public class GameMap {
     private TextureRegion grassTexture;
     private TextureRegion goldTexture;
     private TextureRegion[] treesTextures;
+    private TextureRegion berryTexture;
 
     public GameMap() {
         this.data = new Cell[CELLS_X][CELLS_Y];
@@ -64,13 +70,15 @@ public class GameMap {
         }
         int treesCount = (int) ((CELLS_X * CELLS_Y * FOREST_PERCENTAGE) / 100.0f);
         for (int i = 0; i < treesCount; i++) {
-            this.data[MathUtils.random(0, CELLS_X - 1)][MathUtils.random(0, CELLS_Y - 1)].changeType(CellType.TREE);
-
+            Cell c = this.data[MathUtils.random(0, CELLS_X - 1)][MathUtils.random(0, CELLS_Y - 1)];
+            c.changeType(CellType.TREE);
+            if (MathUtils.random(0, 100) >= BERRY_TREE_PROBABILITY) c.changeType(CellType.TREE_WITH_BERRY);
         }
 
         this.grassTexture = Assets.getInstance().getAtlas().findRegion("grass");
         this.goldTexture = Assets.getInstance().getAtlas().findRegion("chest").split(60, 60)[0][0];
         this.treesTextures = Assets.getInstance().getAtlas().findRegion("trees").split(60, 90)[0];
+        this.berryTexture = Assets.getInstance().getAtlas().findRegion("berry");
     }
 
     public boolean isCellPassable(int cx, int cy) {
@@ -91,11 +99,37 @@ public class GameMap {
         }
     }
 
+    public void addNewBerryTree() {
+        ArrayList<Cell> treesArray = new ArrayList<>();
+        for (int i = 0; i < CELLS_X; i++) {
+            for (int j = CELLS_Y - 1; j >= 0; j--) {
+                if (data[i][j].type == CellType.TREE) {
+                    treesArray.add(data[i][j]);
+                }
+            }
+        }
+        Collections.shuffle(treesArray);
+        treesArray.get(0).changeType(CellType.TREE_WITH_BERRY);
+    }
+
+    public boolean collectBerry(int cellX, int cellY) {
+        if (data[cellX][cellY].type == CellType.TREE_WITH_BERRY) {
+            data[cellX][cellY].type = CellType.TREE;
+            return true;
+        }
+        return false;
+    }
+
+
     public void renderObjects(SpriteBatch batch) {
         for (int i = 0; i < CELLS_X; i++) {
             for (int j = CELLS_Y - 1; j >= 0; j--) {
                 if (data[i][j].type == CellType.TREE) {
                     batch.draw(treesTextures[data[i][j].index], i * CELL_SIZE, j * CELL_SIZE);
+                }
+                if (data[i][j].type == CellType.TREE_WITH_BERRY) {
+                    batch.draw(treesTextures[data[i][j].index], i * CELL_SIZE, j * CELL_SIZE);
+                    batch.draw(berryTexture, (i * CELL_SIZE) + 20, (j * CELL_SIZE) + 40);
                 }
                 if (data[i][j].dropType == DropType.GOLD) {
                     batch.draw(goldTexture, i * CELL_SIZE, j * CELL_SIZE);

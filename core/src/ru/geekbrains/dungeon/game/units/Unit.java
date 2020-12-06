@@ -96,7 +96,7 @@ public abstract class Unit implements Poolable {
         gold += amount;
     }
 
-    public void cure(int amount) {
+     public void cure(int amount) {
         stats.restoreHp(amount);
     }
 
@@ -142,14 +142,29 @@ public abstract class Unit implements Poolable {
     }
 
     public void goTo(int argCellX, int argCellY) {
+
         if (!gc.isCellEmpty(argCellX, argCellY)) {
+            if (stats.movePoints > 0 && Math.abs(argCellX - cellX) + Math.abs(argCellY - cellY) == 1) {
+                if (gc.getGameMap().collectBerry(argCellX,argCellY))
+                    currentDirection = Direction.getMoveDirection(cellX, cellY, targetX, targetY);
+                this.isWellFedLeftOrHPLoss(1);
+                stats.restoreWellFed(30);
+            }
             return;
         }
         if (stats.movePoints > 0 && Math.abs(argCellX - cellX) + Math.abs(argCellY - cellY) == 1) {
             targetX = argCellX;
             targetY = argCellY;
             currentDirection = Direction.getMoveDirection(cellX, cellY, targetX, targetY);
+            this.isWellFedLeftOrHPLoss(1);
         }
+    }
+
+    public void isWellFedLeftOrHPLoss(int amount) {
+        if (stats.wellFed <= 0) {
+            stats.wellFed = 0;
+            stats.hp -= amount;
+        } else stats.wellFed -= amount;
     }
 
     public boolean canIAttackThisTarget(Unit target, int cost) {
@@ -168,6 +183,7 @@ public abstract class Unit implements Poolable {
             }
         }
         stats.attackPoints--;
+        this.isWellFedLeftOrHPLoss(1);
 
         gc.getEffectController().setup(target.getCellCenterX(), target.getCellCenterY(), weapon.getFxIndex());
     }

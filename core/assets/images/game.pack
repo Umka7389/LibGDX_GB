@@ -87,3 +87,10 @@ projectile
   orig: 16, 16
   offset: 0, 0
   index: -1
+berry
+  rotate: false
+  xy: 304, 406
+  size: 11, 11
+  orig: 11, 11
+  offset: 0, 0
+  index: -1
