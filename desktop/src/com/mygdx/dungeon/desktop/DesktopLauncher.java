@@ -2,7 +2,8 @@ package com.mygdx.dungeon.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.mygdx.dungeon.DungeonGame;
+import ru.geekbrains.dungeon.DungeonGame;
+
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
